@@ -1,4 +1,4 @@
-<?php	
+<?php
 
 $lastUsers = new Storage(1);
 $lastUsers->connect();

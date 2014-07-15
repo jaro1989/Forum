@@ -1,4 +1,5 @@
 <?php
+
 //Подключение к базе данных
 $data = new Storage(1);
 $data->dsn = 'mysql:dbname=forum;host=127.0.0.1';

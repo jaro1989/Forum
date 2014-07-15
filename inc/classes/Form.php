@@ -1,35 +1,32 @@
 <?php
 
 Class Form {
-	
-	private $info = "";
-	private $user = "";
+
+    private $info = "";
+    private $user = "";
     private $email = "";
     protected $dataDir = "data/data.txt";
     protected $captcha = "";
     protected $password = "";
-	
     public $data;
     public $picture;
-	public $errors;
+    public $errors;
     protected $answer;
-	
 
     public function getUserInfo(array $dataArray) {
         $this->user = htmlspecialchars(trim($dataArray['user']));
         $this->email = htmlspecialchars(trim($dataArray['email']));
         $this->password = htmlspecialchars(trim($dataArray['password']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
-		
     }
 
-     public function validateAll() {
+    public function validateAll() {
         if (self::validateUser() and
-            self::validateEmail() and
-            self::validatePassword() and
-            self::validateCaptcha()) {
+                self::validateEmail() and
+                self::validatePassword() and
+                self::validateCaptcha()) {
             return TRUE;
-		} else {
+        } else {
             if (!self::validateUser()) {
                 $errors['user'] = "Введите правильное имя";
             }
@@ -40,22 +37,21 @@ Class Form {
             } if (!self::validateCaptcha()) {
                 self::generateCaptcha();
                 $errors['captcha'] = "Неверная капча";
-				
             }
-			$this->errors = $errors;
-			return FALSE;
-            
+            $this->errors = $errors;
+            return FALSE;
         }
-	 }
+    }
 
     private function getNewInfo() {
         if ($this->info != "") {
-            $ajaxContent = file("../../".$this->dataDir);
+            $ajaxContent = file("../../" . $this->dataDir);
             $i = count($ajaxContent);
             $this->ajaxInfo = '{"status":1, "message":' . $ajaxContent[$i - 1] . '}';
-        } 
+        }
     }
-	 public function getData() {
+
+    public function getData() {
         $data = file($this->dataDir);
         foreach ($data as $value) {
             $this->data[] = json_decode($value, true);
@@ -85,7 +81,7 @@ Class Form {
         $this->picture = "$a + $b =";
         $this->answer = $a + $b;
         $_SESSION['answer'] = $this->answer;
-		return $this->picture;
+        return $this->picture;
     }
 
     public function validateCaptcha() {
@@ -103,6 +99,5 @@ Class Form {
             return TRUE;
         }
     }
-
 
 }

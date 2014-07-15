@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>Forum3</title>
+        <title>Forum</title>
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
         <!-- Fontawesome core CSS -->
@@ -27,7 +27,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="htttp://www.binarytheme.com">FORUM</a>
+                    <p>FORUM</p>
                 </div>
                 <!-- Collect the nav links for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -38,18 +38,18 @@
                         </li>
                         <li><a href="index.php?page=contacts">Контакты</a>
                         </li>
-                        
-                        <?php if(!isset($_SESSION['userName'])){?>
-                        <li><a href="index.php?page=registration">Регистрация</a>
-                        </li>
-                        <li><a href="index.php?page=login">Login</a>
-                        </li>
+
+                        <?php if (!isset($_SESSION['userName'])) { ?>
+                            <li><a href="index.php?page=registration">Регистрация</a>
+                            </li>
+                            <li><a href="index.php?page=login">Login</a>
+                            </li>
                         <?php } else { ?>
-                        <li><a href="index.php?page=user">Ваш Аккаунт</a>
-                        </li>
-                        <li><a href="index.php?page=logout">Logout, <?php echo $_SESSION['userName'];?></a>
-                        </li>
-                        <?php }  ?>
+                            <li><a href="index.php?page=user">Ваш Аккаунт</a>
+                            </li>
+                            <li><a href="index.php?page=logout">Logout, <?php echo $_SESSION['userName']; ?></a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->

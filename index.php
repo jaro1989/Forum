@@ -1,0 +1,22 @@
+<?php
+session_start();
+error_reporting(E_ALL);
+if($_GET['page'] == 'logout'){
+	unset($_SESSION['userName']);
+	
+}
+//Подключение интерфейса
+include ("inc/classes/Data.php");
+//Подключение классов
+include ("inc/classes/Form.php");
+include ("inc/classes/Storage.php");
+include ("inc/classes/ContentManager.php");
+//Загрузка и обрработка шаблона
+(isset($_GET['page'])) ? $fileManager = new ContentManager($_GET['page']) : $fileManager = new ContentManager('main');
+include ($fileManager->modifyDirectory);
+include ("view/layout/header.php");
+
+include ($fileManager->tplDirectory);
+
+include ("view/layout/footer.php");
+

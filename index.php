@@ -1,9 +1,11 @@
 <?php
+
 session_start();
 error_reporting(E_ALL);
-if($_GET['page'] == 'logout'){
-	unset($_SESSION['userName']);
-	
+//Выход пользователя
+if ($_GET['page'] == 'logout') {
+    unset($_SESSION['userName']);
+    unset($_SESSION['userID']);
 }
 //Подключение интерфейса
 include ("inc/classes/Data.php");

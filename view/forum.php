@@ -1,8 +1,12 @@
 <!--jumbotron-->
 <div class="jumbotron top-margin-low">
-    <h2><strong>Добро пожаловать на наш форум</strong>  </h2>
-    <p>Здесь вы можете поделиться последними новостями</p>
+    <?php if (!isset($_SESSION['userID'])) { ?>
+        <h2><strong>Зарегестрируйтесь для создания новых категорий и постов</strong>  </h2>
+    <?php } else { ?>
 
+        <h2><strong>Выберите категорию или создайте новую</strong>  </h2>
+
+    <?php } ?>
 
 
 </div>
@@ -18,42 +22,7 @@
                     Список категорий
                 </div>
                 <div class="panel-body">
-                    <ul>
-                        <li>
-                            <a href="#">Information Technology (90)</a>
-                        </li>
-                        <li>
-                            <a href="#">Search Engine(45) </a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(34)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(56)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(09)</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(11)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(1)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(67)</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(300)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(345)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(45)</a>
-                        </li>
-                    </ul>
-
+                    <?php echo ContentManager::renderCategories($categories, "messNum"); ?>
                 </div>
 
             </div>
@@ -62,41 +31,7 @@
                     Последние добавления
                 </div>
                 <div class="panel-body">
-                    <ul>
-                        <li>
-                            <a href="#">Information Technology (90)</a>
-                        </li>
-                        <li>
-                            <a href="#">Search Engine(45) </a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(34)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(56)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(09)</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(11)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(1)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(67)</a>
-                        </li>
-                        <li>
-                            <a href="#">Web Designing(300)</a>
-                        </li>
-                        <li>
-                            <a href="#">Mutilevel Development(345)</a>
-                        </li>
-                        <li>
-                            <a href="#">Technology Trends(45)</a>
-                        </li>
-                    </ul>
+                    <?php echo ContentManager::renderCategories($categories, "messNum"); ?>
 
                 </div>
 
@@ -104,8 +39,11 @@
         </div>
         <!--End Categories and other --> 
         <!--Blog Listing--> 
-
-        <!--Blog Listing--> 
+        <div class="col-md-8 top-margin">
+            <?php if (isset($_SESSION['userID'])) { ?>
+                <a href="index.php?page=forum&&action=create">Создать новое собщение</a>
+            <?php } ?>
+        </div>
 
     </div>
     <!--Blog end-->  

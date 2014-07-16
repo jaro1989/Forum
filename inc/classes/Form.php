@@ -14,21 +14,21 @@ Class Form {
     protected $answer;
 
     public function getUserInfo(array $dataArray) {
-        $this->user = htmlspecialchars(trim($dataArray['user']));
+        $this->user = htmlspecialchars(trim($dataArray['login']));
         $this->email = htmlspecialchars(trim($dataArray['email']));
         $this->password = htmlspecialchars(trim($dataArray['password']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
     }
 
     public function validateAll() {
-        if (self::validateUser() and
+        if (self::validateLogin() and
                 self::validateEmail() and
                 self::validatePassword() and
                 self::validateCaptcha()) {
             return TRUE;
         } else {
-            if (!self::validateUser()) {
-                $errors['user'] = "Введите правильное имя";
+            if (!self::validateLogin()) {
+                $errors['login'] = "Введите правильное имя";
             }
             if (!self::validateEmail()) {
                 $errors['email'] = "Введите корректный email";
@@ -58,7 +58,7 @@ Class Form {
         }
     }
 
-    protected function validateUser() {
+    protected function validateLogin() {
         if (!preg_match("~^(\w{3,})+$~i", $this->user)) {
             return FALSE;
         } else {

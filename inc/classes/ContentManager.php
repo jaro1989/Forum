@@ -22,7 +22,7 @@ class ContentManager {
                 $value["$printedData"] = date("Y/m/d H:i", strtotime($value["$printedData"]));
             }
             $html .= "<li>";
-            $html .= "<a href=''>" . $value['name'] . "&nbsp;(" . $value["$printedData"] . ")</a>";
+            $html .= "<a href=''>" . $value['title'] . "&nbsp;(" . $value["$printedData"] . ")</a>";
             $html .= "</li>";
         }
         return $html;
@@ -32,7 +32,7 @@ class ContentManager {
         $html = "";
         foreach ($data as $value) {
             $html .="<li class='time-label'>";
-            $html .="<span class='bg-light-blue'>Posted in : $value[category] : by $value[user]";
+            $html .="<span class='bg-light-blue'>Posted in : " . $value['cat_title'] . " : by " . $value['login'];
             $html .="</span>";
             $html .="<br />";
             $html .="<br />";
@@ -48,14 +48,14 @@ class ContentManager {
             $html .="";
             $html .="<div class='timeline-item'>";
             $html .="<span class='time'>" . date("M d", strtotime($value['dateAdd'])) . "</span>";
-            $html .="<h3 class='timeline-header'>$value[title]</h3>";
+            $html .="<h3 class='timeline-header'>" . $value['title'] . "</h3>";
 
             $html .="<div class='timeline-body'>";
-            $html .="$value[text]";
+            $html .=$value['text'];
             $html .="</div>";
 
             $html .="<div class='timeline-footer'>";
-            $html .="<a class='btn btn-default btn-xs'>by: $value[user]</a>";
+            $html .="<a class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
             $html .="</div>";
             $html .="</div>";
             $html .="</li>";
@@ -70,7 +70,7 @@ class ContentManager {
                 $value["$printedData"] = date("Y/m/d H:i", strtotime($value["$printedData"]));
             }
             $html .= "<li>";
-            $html .= "<a href=''>" . $value['user'] . "&nbsp;(" . $value["$printedData"] . ")</a>";
+            $html .= $value['login'] . "&nbsp;(" . $value["$printedData"] . ")";
             $html .= "</li>";
         }
         return $html;
@@ -91,8 +91,71 @@ class ContentManager {
     public static function renderSucsess() {
 
         $html = "<p>Вы успешно прогли регистрацию<br />";
-        $html .= "<a href='index.php?page=user'>Доступ к личному кабинету</a>";
+        $html .= "<a href='index.php?page=login'>Войти как пользователь</a>";
 
+        return $html;
+    }
+
+    public static function renderUserAccountInfo(array $data) {
+        $html = "";
+        foreach ($data as $value) {
+
+            $html .= "<h3>" . $value['login'] . "</h3>";
+            $html .= "<h6>Email:" . $value['email'] . "</h6>";
+            $html .= "<h6>About:" . $value['about'] . "</h6>";
+        }
+        return $html;
+    }
+
+    public static function renderUserUpdateTable(array $data) {
+        $html = "<h3>Данные пользователя</h3><br>";
+        foreach ($data as $value) {
+
+            $html .= "<form class='form col-md-10 center-block' action='index.php?page=user' method='post'>";
+            $html .= "<div>Login</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<input class='form-control' value=" . $value['id'] . " name='userID' type='hidden'>";
+            $html .= "<input class='form-control' value=" . $value['login'] . " name='login' type='text'>";
+            $html .= "</div>";
+            $html .= "<div>Email</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<input class='form-control' value=" . $value['email'] . "  name='email' type='email'>";
+            $html .= "</div>";
+            $html .= "<div>About</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<textarea class='form-control' name='about'>" . $value['about'] . "</textarea>";
+            $html .= "</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<button type='submit' class='btn btn-primary btn-lg btn-block'>Применить изменения</button>";
+            $html .= "</div>";
+            $html .= "</form>";
+        }
+        return $html;
+    }
+
+    public static function renderPostForm(array $data) {
+        $html = "<h3>Данные пользователя</h3><br>";
+        foreach ($data as $value) {
+
+            $html .= "<form class='form col-md-10 center-block' action='index.php?page=forum&&action=create_done' method='post'>";
+            $html .= "<div>Login</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<select name='category'>";
+            $html .= "<input class='form-control' value=" . $value['login'] . " name='login' type='text'>";
+            $html .= "</div>";
+            $html .= "<div>Email</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<input class='form-control' value=" . $value['email'] . "  name='email' type='email'>";
+            $html .= "</div>";
+            $html .= "<div>About</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<textarea class='form-control' name='about'>" . $value['about'] . "</textarea>";
+            $html .= "</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<button type='submit' class='btn btn-primary btn-lg btn-block'>Применить изменения</button>";
+            $html .= "</div>";
+            $html .= "</form>";
+        }
         return $html;
     }
 

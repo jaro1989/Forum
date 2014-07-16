@@ -8,10 +8,11 @@
  */
 class Storage implements Data {
 
-    public $dsn = 'mysql:dbname=forum;host=127.0.0.1';
+    public $dsn = 'mysql:dbname=vm_forum;host=127.0.0.1';
     public $user = 'root';
     public $password = '';
     public $dataDir = "data/data.txt"; //Дериктория файла с данными
+    public $error = array();
     private $type; //Тип хранения данных (1 - MySQL, 2 - FILE.txt)
 
     /**
@@ -78,18 +79,52 @@ class Storage implements Data {
     }
 
     public function getCategories($order) {
-        $query = "SELECT name,$order FROM f_categories ORDER BY $order DESC";
+        $query = "SELECT title,$order FROM f_categories ORDER BY $order DESC";
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
         return $this->data;
     }
 
-    public function getPosts($user) {
-        $query = "SELECT f_posts.title,f_posts.text,f_posts.dateAdd,f_users.user,f_posts.category FROM f_posts
-			JOIN f_users 
-			ON f_posts.user = f_users.id where f_users.user = '$user' 
-			ORDER BY f_posts.dateAdd DESC";
+    public function getPosts($userID) {
+        $query = "SELECT
+					f_posts.title,
+					f_posts.text,
+					f_posts.dateAdd,
+					f_users.login,
+					f_categories.title AS cat_title
+					FROM
+					f_users
+					INNER JOIN f_posts ON f_posts.user_id = f_users.id
+					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
+					WHERE
+					f_users.id = f_posts.user_id AND
+					f_posts.category_id = f_categories.id AND
+					f_users.id = $userID
+					ORDER BY f_posts.dateAdd DESC";
+
+        $sth = $this->dbh->prepare($query);
+        $sth->execute();
+        $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        return $this->data;
+    }
+
+    public function getCategoryPosts($categoryID) {
+        $query = "SELECT
+					f_posts.title,
+					f_posts.text,
+					f_posts.dateAdd,
+					f_users.login,
+					f_categories.title AS cat_title
+					FROM
+					f_users
+					INNER JOIN f_posts ON f_posts.user_id = f_users.id
+					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
+					WHERE
+					f_users.id = f_posts.user_id AND
+					f_posts.category_id = f_categories.id AND
+					f_posts.category_id = $categoryID;
+					ORDER BY f_posts.dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
         $sth->execute();
@@ -98,7 +133,7 @@ class Storage implements Data {
     }
 
     public function getUsers() {
-        $query = 'SELECT user,dateAdd FROM f_users ORDER BY dateAdd DESC';
+        $query = 'SELECT login,dateAdd FROM f_users ORDER BY dateAdd DESC';
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -106,16 +141,46 @@ class Storage implements Data {
     }
 
     public function putUserInfo(array $info) {
-        $sth = $this->dbh->prepare('INSERT INTO `f_users` (`user`, `status`, `email`,`dateAdd`, `password`, `about`, `numComments`)
-		 VALUES (:user, 2, :email, NOW(), :password, :about, 0 )');
-        $sth->execute(array(':user' => $info['user'], ':email' => $info['email'], ':password' => md5($info['password']), ':about' => $info['about']));
+        $sth = $this->dbh->prepare('SELECT login FROM f_users WHERE login = :login');
+        $sth->execute(array(':login' => $info['login']));
+        if ($sth->fetchAll(PDO::FETCH_ASSOC) != NULL) {
+            $this->error['login'] = "Данный логин уже занят";
+        }
+        $sth = $this->dbh->prepare('SELECT email FROM f_users WHERE email = :email');
+        $sth->execute(array(':email' => $info['email']));
+        if ($sth->fetchAll(PDO::FETCH_ASSOC) != NULL) {
+            $this->error['email'] = "Данный email уже существует";
+        }
+        if (!isset($this->error['email']) and !isset($this->error['login'])) {
+            $sth = $this->dbh->prepare('INSERT INTO f_users (login, status_id, email,dateAdd, password, about)
+		VALUES (:login, 2, :email, NOW(), :password, :about)');
+            $sth->execute(array(':login' => $info['login'], ':email' => $info['email'], ':password' => md5($info['password']), ':about' => $info['about']));
+        }
+        return $this->error;
     }
 
     public function findUser(array $info) {
-        $sth = $this->dbh->prepare('SELECT user,password FROM f_users where user = :user and password = :password');
-        $sth->execute(array(':user' => $info['login'], ':password' => md5($info['password'])));
+        $sth = $this->dbh->prepare('SELECT id,login,password FROM f_users WHERE login = :login and password = :password');
+        $sth->execute(array(':login' => $info['login'], ':password' => md5($info['password'])));
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
         return $this->data;
+    }
+
+    public function getUserAccountInfo($userID) {
+        $sth = $this->dbh->prepare('SELECT id,login,email,about FROM f_users where id = :id');
+        $sth->execute(array(':id' => $userID));
+        $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        return $this->data;
+    }
+
+    public function updateUserInfo(array $info) {
+        $sth = $this->dbh->prepare('UPDATE f_users SET login = :login, email = :email, about = :about  WHERE id = :id');
+        $sth->execute(array(':id' => $info['userID'], ':login' => $info['login'], ':email' => $info['email'], ':about' => $info['about']));
+    }
+
+    public function deleteUserInfo($userID) {
+        $sth = $this->dbh->prepare('DELETE FROM f_users WHERE id = :id');
+        $sth->execute(array(':id' => $userID));
     }
 
 }

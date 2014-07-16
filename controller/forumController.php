@@ -1,8 +1,15 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Подключение к базе данных
+$data = new Storage(1);
+$data->connect();
+$categories = $data->getCategories('messNum');
+(isset($_SESSION['userName'])) ? $posts = $data->getPosts($_SESSION['userID']) : $posts = $data->getPosts('7');
+
+
+
+
+
+
+
 

@@ -24,18 +24,7 @@
                 </div>
 
             </div>
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    Последние добавления
-                </div>
-                <div class="panel-body">
-                    <ul>
-                        <?php echo ContentManager::renderCategories($lastCategories, "dateAdd"); ?>
-                    </ul>
 
-                </div>
-
-            </div>
         </div>
         <!--End Categories and other --> 
         <!--Blog Listing--> 

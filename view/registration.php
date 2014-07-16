@@ -43,7 +43,7 @@
                     <div class="control-group">
                         <label class="control-label" for="Login">Login:</label>
                         <div class="controls">
-                            <input id="user" name="user" placeholder="Ваш Логин" class="input-medium" required="" type="text">
+                            <input id="user" name="login" placeholder="Ваш Логин" class="input-medium" required="" type="text">
                             <p class="help-block">Введите логин</p>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                         <label class="control-label" for="captcha">Captcha</label>
                         <div class="controls">
                             <div class="input-prepend">
-                                <span class="add-on"><?php echo $form->generateCaptcha(); ?></span>
+                                <span class="add-on"><?php echo $captcha->generateCaptcha(); ?></span>
                                 <input id="captcha" name="captcha" class="input-medium" placeholder="" required="" type="text">
                             </div>
                             <p class="help-block">Введите решение</p>

@@ -1,45 +1,45 @@
 <!--jumbotron-->
 
 <div class="jumbotron top-margin-low">
-<div class="container" >
-		<div class="row "> 
-        <div class="col-md-3 top-margin">  
-        </div>
-        <!--Categories and other -->            
-        <div class="col-md-4 top-margin">   
- <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<? echo $_GET['cat_id'];?>"method="post">
-                <fieldset>
+    <div class="container" >
+        <div class="row "> 
+            <div class="col-md-3 top-margin">  
+            </div>
+            <!--Categories and other -->            
+            <div class="col-md-4 top-margin">   
+                <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<? echo $_GET['cat_id'];?>"method="post">
+                    <fieldset>
 
-                    <!-- Form Name -->
-                    <legend>Добавить запись</legend>
+                        <!-- Form Name -->
+                        <legend>Добавить запись</legend>
 
-                    <!-- Text input-->
-                    <div class="control-group">
+                        <!-- Text input-->
+                        <div class="control-group">
                             <div>       
-                            <label class="control-label" for="email">Заголовок сообщения:</label>
+                                <label class="control-label" for="email">Заголовок сообщения:</label>
                             </div>
                             <div>
-                            <input id="post_title" name="post_title" placeholder="" class="input-medium" required="" type="text">
+                                <input id="post_title" name="post_title" placeholder="" class="input-medium" required="" type="text">
                             </div>
                             <div>
-                            <label class="control-label" for="about">Текст сообщения</label>
+                                <label class="control-label" for="about">Текст сообщения</label>
                             </div>
                             <div>
-                            <textarea id="about" cols="50" name="post_text"></textarea>
+                                <textarea id="about" cols="50" name="post_text"></textarea>
                             </div>
                             <div>
-                            <button type="submit" name="Submit" class="btn btn-primary">Создать запись</button>
+                                <button type="submit" name="Submit" class="btn btn-primary">Создать запись</button>
                             </div>
                         </div>
-                        </div>
-                    </div>
 
-                </fieldset>
-            </form>
-		</div>
-	</div>
-</div>
-<!--End jumbotron-->
+
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--End jumbotron-->
 
     <!--Blog Start-->  
     <div class="row "> 

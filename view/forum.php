@@ -26,9 +26,9 @@
                 </div>
 
             </div>
-           
-        <!--End Categories and other --> 
-        <!--Blog Listing--> 
+
+            <!--End Categories and other --> 
+            <!--Blog Listing--> 
         </div>
     </div>
     <!--Blog end-->  

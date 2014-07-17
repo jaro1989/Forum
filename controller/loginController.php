@@ -7,7 +7,7 @@ if (isset($_POST) and $_POST != NULL) {
     if ($result != NULL) {
         $_SESSION['userName'] = $result[0]['login'];
         $_SESSION['userID'] = $result[0]['id'];
-		echo $_SESSION['userID'];
+        echo $_SESSION['userID'];
         $authMessage = "Вы Зарегистрированы!";
     } else {
         $authMessage = "Неправильный логин или пароль";

@@ -1,7 +1,7 @@
 ﻿<!--jumbotron-->
 <div class="jumbotron top-margin-low">
     <h2><strong>Создайте новую категорию и сделайте первую запись</strong>  </h2>
-    
+
 
 
 
@@ -13,7 +13,7 @@
         <!--Categories and other -->            
         <div class="col-md-2 top-margin">
 
-           
+
 
 
 
@@ -21,14 +21,14 @@
         <!--End Categories and other --> 
         <!--Blog Listing--> 
         <div class="col-md-8">
-				 <?php
-                if (isset($errorsInfo)) {
-                    echo ContentManager::renderRegErrors($errorsInfo);
-                }
-                if (isset($sucsess)) {
-                    echo ContentManager::renderSucsess('category');
-                }
-                ?>
+            <?php
+            if (isset($errorsInfo)) {
+                echo ContentManager::renderRegErrors($errorsInfo);
+            }
+            if (isset($sucsess)) {
+                echo ContentManager::renderSucsess('category');
+            }
+            ?>
             <form class="form-horizontal" action="index.php?page=createPost&&action=done"method="post">
                 <fieldset>
 

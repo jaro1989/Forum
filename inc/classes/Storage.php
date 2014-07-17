@@ -79,7 +79,7 @@ class Storage implements Data {
     }
 
     public function getCategories($order) {
-        $query = "SELECT title,$order FROM f_categories ORDER BY $order DESC";
+        $query = "SELECT id,title,$order FROM f_categories ORDER BY $order DESC";
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ class Storage implements Data {
         $query = "SELECT
 					f_posts.title,
 					f_posts.text,
-					f_posts.dateAdd,
+					f_posts.dateAdd AS dateAdd,
 					f_users.login,
 					f_categories.title AS cat_title
 					FROM
@@ -101,7 +101,7 @@ class Storage implements Data {
 					f_users.id = f_posts.user_id AND
 					f_posts.category_id = f_categories.id AND
 					f_users.id = $userID
-					ORDER BY f_posts.dateAdd DESC";
+					ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
         $sth->execute();
@@ -113,7 +113,7 @@ class Storage implements Data {
         $query = "SELECT
 					f_posts.title,
 					f_posts.text,
-					f_posts.dateAdd,
+					f_posts.dateAdd AS dateAdd,
 					f_users.login,
 					f_categories.title AS cat_title
 					FROM
@@ -123,8 +123,8 @@ class Storage implements Data {
 					WHERE
 					f_users.id = f_posts.user_id AND
 					f_posts.category_id = f_categories.id AND
-					f_posts.category_id = $categoryID;
-					ORDER BY f_posts.dateAdd DESC";
+					f_posts.category_id = $categoryID
+					ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
         $sth->execute();
@@ -182,5 +182,40 @@ class Storage implements Data {
         $sth = $this->dbh->prepare('DELETE FROM f_users WHERE id = :id');
         $sth->execute(array(':id' => $userID));
     }
-
+	public function putCategory(array $info, $userID) {
+        $sth = $this->dbh->prepare('SELECT title FROM f_categories WHERE title = :title');
+        $sth->execute(array(':title' => $info['categoryTitle']));
+        if ($sth->fetchAll(PDO::FETCH_ASSOC) != NULL) {
+            $this->error['title'] = "Категория уже сущетсвует";
+        }
+        
+        if (!isset($this->error['title'])) {
+            $sth = $this->dbh->prepare('INSERT INTO f_categories (title, messNum, user_id)
+		VALUES (:title, 1, :user_id)');
+            $sth->execute(array(':title' => $info['categoryTitle'], ':user_id' => $userID));
+        }
+        
+    }
+	public function putPost(array $info, $userID) {
+        $sth = $this->dbh->prepare('SELECT id,title FROM f_categories WHERE title = :title');
+        $sth->execute(array(':title' => $info['categoryTitle']));
+        $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $sth = $this->dbh->prepare('INSERT INTO f_posts (category_id, user_id,title, dateAdd, text)
+		VALUES (:cat_id, :user_id, :title, NOW(), :text)');
+        $sth->execute(array(':cat_id' => $data['0']['id'], ':user_id' => $userID,':title'=> $info['postTitle'], ':text' => $info['postText']));
+        
+    }
+		public function putNewPost(array $info, $userID, $catID) {
+        $sth = $this->dbh->prepare('SELECT messNum FROM f_categories WHERE id = :cat_id');
+        $sth->execute(array(':cat_id' => $catID));
+        $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $sth = $this->dbh->prepare('INSERT INTO f_posts (category_id, user_id,title, dateAdd, text)
+		VALUES (:cat_id, :user_id, :title, NOW(), :text)');
+        $sth->execute(array(':cat_id' => $catID, ':user_id' => $userID,':title'=> $info['postTitle'], ':text' => $info['postText']));
+		
+		$sth = $this->dbh->prepare('UPDATE f_categories SET  messNum =:newNum 
+		WHERE id = :cat_id');
+        $sth->execute(array(':cat_id' => $catID, ':newNum' => $data[0]['messNum']+1));
+        
+    }
 }

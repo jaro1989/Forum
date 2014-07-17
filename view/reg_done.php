@@ -44,9 +44,10 @@
                 <?php
                 if (isset($errorsInfo)) {
                     echo ContentManager::renderRegErrors($errorsInfo);
+					?><a href='index.php?page=registration'>Вернуться на поле регистрации</a><?
                 }
                 if (isset($sucsess)) {
-                    echo ContentManager::renderSucsess();
+                    echo ContentManager::renderSucsess('registration');
                 }
                 ?>
             </div>

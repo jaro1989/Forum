@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2014-07-16 16:41:21
+Date: 2014-07-17 14:58:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,13 +24,16 @@ CREATE TABLE `f_categories` (
   `title` varchar(255) DEFAULT NULL,
   `messNum` int(8) unsigned DEFAULT NULL,
   `user_id` int(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Unique_title` (`title`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of f_categories
 -- ----------------------------
-INSERT INTO `f_categories` VALUES ('1', 'Новая тема', '0', '3');
+INSERT INTO `f_categories` VALUES ('1', 'Новая тема', '8', '3');
+INSERT INTO `f_categories` VALUES ('9', '2323', '4', '5');
+INSERT INTO `f_categories` VALUES ('11', '232324', '3', '7');
 
 -- ----------------------------
 -- Table structure for f_posts
@@ -48,7 +51,7 @@ CREATE TABLE `f_posts` (
   KEY `FK_posts_2_categories` (`category_id`),
   CONSTRAINT `FK_posts_2_categories` FOREIGN KEY (`category_id`) REFERENCES `f_categories` (`id`),
   CONSTRAINT `FK_posts_2_users` FOREIGN KEY (`user_id`) REFERENCES `f_users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of f_posts
@@ -56,7 +59,6 @@ CREATE TABLE `f_posts` (
 INSERT INTO `f_posts` VALUES ('1', '1', '5', 'Новая тема', 'Новая тема', '2014-07-16 15:14:30');
 INSERT INTO `f_posts` VALUES ('2', '1', '6', 'Новая етма2 ', '123123123', '2014-07-16 15:15:41');
 INSERT INTO `f_posts` VALUES ('3', '1', '7', 'Админсккий пост', 'Добро пожаловать', '2014-07-16 15:24:31');
-INSERT INTO `f_posts` VALUES ('4', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for f_statuses
@@ -88,9 +90,10 @@ CREATE TABLE `f_users` (
   `about` varchar(255) DEFAULT NULL,
   `status_id` int(8) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `Unique_user` (`login`,`email`),
   KEY `status_id` (`status_id`),
   CONSTRAINT `FK_users_2_statuses` FOREIGN KEY (`status_id`) REFERENCES `f_statuses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of f_users

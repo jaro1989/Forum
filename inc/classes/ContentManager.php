@@ -3,7 +3,7 @@
 class ContentManager {
 
     public $currentPage = 'main';
-    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login');
+    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login','createPost', 'forum_in');
     public $modifyDirectory;
     public $tplDirectory;
 
@@ -16,16 +16,24 @@ class ContentManager {
     }
 
     public static function renderCategories(array $data, $printedData) {
-        $html = "";
+        $html = "<ul class='list-group'>";
+        
         foreach ($data as $value) {
             if ($printedData === "dateAdd") {
                 $value["$printedData"] = date("Y/m/d H:i", strtotime($value["$printedData"]));
             }
-            $html .= "<li>";
-            $html .= "<a href=''>" . $value['title'] . "&nbsp;(" . $value["$printedData"] . ")</a>";
-            $html .= "</li>";
+			$html .= "<li class='list-group-item'>";
+			
+            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&&cat_id=".$value['id'] ." '>" . $value['title'] . "</a>";
+            
+			$html .= "</li>";
         }
+		$html .= "</ul>";
         return $html;
+		
+
+ 
+
     }
 
     public static function renderPost(array $data) {
@@ -77,21 +85,27 @@ class ContentManager {
     }
 
     public static function renderRegErrors(array $errors) {
-        $html = "";
+        $html = "<div class='alert alert-error'>";
         foreach ($errors as $value) {
             $html .= "<li>";
             $html .= "$value";
             $html .= "</li>";
         }
         $html .= "</br>";
-        $html .= "<a href='index.php?page=registration'>Вернуться на поле регистрации</a>";
+		$html .= "</div>";
+        
         return $html;
     }
 
-    public static function renderSucsess() {
-
-        $html = "<p>Вы успешно прогли регистрацию<br />";
+    public static function renderSucsess($type) {
+		if($type === 'category'){
+		$html = "<p>Категория создана<br />";
+        $html .= "<a href='index.php?page=forum'>Перейти на форум</a>";
+		}
+		if($type === 'registration'){
+        $html = "<p>Вы успешно прошли регистрацию<br />";
         $html .= "<a href='index.php?page=login'>Войти как пользователь</a>";
+		}
 
         return $html;
     }

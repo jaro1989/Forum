@@ -14,11 +14,29 @@ Class Form {
     protected $answer;
 
     public function getUserInfo(array $dataArray) {
-        $this->user = htmlspecialchars(trim($dataArray['login']));
-        $this->email = htmlspecialchars(trim($dataArray['email']));
-        $this->password = htmlspecialchars(trim($dataArray['password']));
+        $this->data['login'] = htmlspecialchars(trim($dataArray['login']));
+        $this->data['email'] = htmlspecialchars(trim($dataArray['email']));
+        $this->data['password'] = htmlspecialchars(trim($dataArray['password']));
+		$this->data['about'] = htmlspecialchars(trim($dataArray['about']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
     }
+	public function getCategoryInfo(array $dataArray) {
+        $this->data['categoryTitle'] = htmlspecialchars(trim($dataArray['category_title']));
+        $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
+        $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
+        $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
+		if(!$this->validateCaptcha()){
+			return $this->errors['captcha'] = "Неверная капча";
+		};
+    }
+	public function getNewPost(array $dataArray) {
+        
+        $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
+        $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
+        
+		
+    }
+	
 
     public function validateAll() {
         if (self::validateLogin() and
@@ -59,7 +77,7 @@ Class Form {
     }
 
     protected function validateLogin() {
-        if (!preg_match("~^(\w{3,})+$~i", $this->user)) {
+        if (!preg_match("~^(\w{3,})+$~i", $this->data['login'])) {
             return FALSE;
         } else {
             return TRUE;
@@ -67,7 +85,7 @@ Class Form {
     }
 
     protected function validateEmail() {
-        if (!preg_match("~^([a-z0-9_\-\.])+@([a-z0-9_\-\.])+\.([a-z0-9])+$~i", $this->email)) {
+        if (!preg_match("~^([a-z0-9_\-\.])+@([a-z0-9_\-\.])+\.([a-z0-9])+$~i", $this->data['email'])) {
             return FALSE;
         } else {
             return TRUE;
@@ -93,7 +111,7 @@ Class Form {
     }
 
     protected function validatePassword() {
-        if (strlen($this->password) < 6 or strlen($this->password) > 50) {
+        if (strlen($this->data['password']) < 6 or strlen($this->data['password']) > 50) {
             return FALSE;
         } else {
             return TRUE;

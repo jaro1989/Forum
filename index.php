@@ -3,7 +3,7 @@
 session_start();
 error_reporting(E_ALL);
 //Выход пользователя
-if ($_GET['page'] == 'logout') {
+if (isset($_GET['page']) and $_GET['page'] == 'logout') {
     unset($_SESSION['userName']);
     unset($_SESSION['userID']);
 }
@@ -16,6 +16,7 @@ include ("inc/classes/ContentManager.php");
 //Загрузка и обрработка шаблона
 (isset($_GET['page'])) ? $fileManager = new ContentManager($_GET['page']) : $fileManager = new ContentManager('main');
 include ($fileManager->modifyDirectory);
+
 include ("view/layout/header.php");
 
 include ($fileManager->tplDirectory);

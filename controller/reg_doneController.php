@@ -3,16 +3,21 @@ $postInfo = new Storage(1);
 $postInfo->connect();
 $formComplete = new Form();
 $formComplete->getUserInfo($_POST);
-$postInfo->putUserInfo($_POST);
-print_r($postInfo->error);
+$postInfo->putUserInfo($formComplete->data);
+
 if($formComplete->validateAll() and !isset($postInfo->error['login']) and !isset($postInfo->error['email'])){
 		
 	$sucsess = TRUE;
 }
 else{
-	(isset($formComplete->errors) and isset($postInfo->error)) ?
-	 $errorsInfo = array_unshift($formComplete->errors,$postInfo->error):
+	if(isset($formComplete->errors) and isset($postInfo->error)){
+	 array_unshift($formComplete->errors, "Логин или пароль уже существуют");
+	 
+	 $errorsInfo = $formComplete->errors;
+	}
+	else{
 	 $errorsInfo = $postInfo->error;
+	}
 	
 }
 

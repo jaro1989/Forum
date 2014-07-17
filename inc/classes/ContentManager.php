@@ -1,12 +1,20 @@
 <?php
-
+/**
+ * Класс ContanManager отвечает за директории и вывод информации
+ */
 class ContentManager {
 
     public $currentPage = 'main';
     public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login','createPost', 'forum_in');
     public $modifyDirectory;
     public $tplDirectory;
-
+    /**
+     * Получает строку и задает подключаемые файлы
+     * с помощью функции getDir
+     * 
+     * @param string $page
+     * 
+     */
     public function __construct($page) {
 
         if (in_array($page, $this->menu)) {
@@ -14,7 +22,12 @@ class ContentManager {
         }
         $this->getDir();
     }
-
+    /**
+     * 
+     * @param array $data Массив значений из запроса к БД
+     * @param string $printedData Сначение индекса из массива, которое необходимо вывести
+     * @return string - HTML
+     */
     public static function renderCategories(array $data, $printedData) {
         $html = "<ul class='list-group'>";
         
@@ -35,7 +48,11 @@ class ContentManager {
  
 
     }
-
+    /**
+     * 
+     * @param array $data Массив Сообщений
+     * @return string - HTML
+     */
     public static function renderPost(array $data) {
         $html = "";
         foreach ($data as $value) {
@@ -70,7 +87,12 @@ class ContentManager {
         }
         return $html;
     }
-
+    /**
+     * 
+     * @param array $data Массив пользователей
+     * @param type $printedData Выводимая информация
+     * @return string HTML
+     */
     public static function renderUsers(array $data, $printedData) {
         $html = "";
         foreach ($data as $value) {
@@ -83,7 +105,11 @@ class ContentManager {
         }
         return $html;
     }
-
+    /**
+     * 
+     * @param array $errors Массив ошибок регистрации
+     * @return string HTML
+     */
     public static function renderRegErrors(array $errors) {
         $html = "<div class='alert alert-error'>";
         foreach ($errors as $value) {
@@ -96,7 +122,11 @@ class ContentManager {
         
         return $html;
     }
-
+    /**
+     * 
+     * @param string $type Вид формы
+     * @return string HTML
+     */
     public static function renderSucsess($type) {
 		if($type === 'category'){
 		$html = "<p>Категория создана<br />";
@@ -109,7 +139,11 @@ class ContentManager {
 
         return $html;
     }
-
+    /**
+     * 
+     * @param array $data Массив информации о пользователе
+     * @return string HTML
+     */
     public static function renderUserAccountInfo(array $data) {
         $html = "";
         foreach ($data as $value) {
@@ -120,7 +154,11 @@ class ContentManager {
         }
         return $html;
     }
-
+    /**
+     * 
+     * @param array $data Массив информации о пользователе
+     * @return string HTML
+     */
     public static function renderUserUpdateTable(array $data) {
         $html = "<h3>Данные пользователя</h3><br>";
         foreach ($data as $value) {
@@ -146,33 +184,9 @@ class ContentManager {
         }
         return $html;
     }
-
-    public static function renderPostForm(array $data) {
-        $html = "<h3>Данные пользователя</h3><br>";
-        foreach ($data as $value) {
-
-            $html .= "<form class='form col-md-10 center-block' action='index.php?page=forum&&action=create_done' method='post'>";
-            $html .= "<div>Login</div>";
-            $html .= "<div class='form-group'>";
-            $html .= "<select name='category'>";
-            $html .= "<input class='form-control' value=" . $value['login'] . " name='login' type='text'>";
-            $html .= "</div>";
-            $html .= "<div>Email</div>";
-            $html .= "<div class='form-group'>";
-            $html .= "<input class='form-control' value=" . $value['email'] . "  name='email' type='email'>";
-            $html .= "</div>";
-            $html .= "<div>About</div>";
-            $html .= "<div class='form-group'>";
-            $html .= "<textarea class='form-control' name='about'>" . $value['about'] . "</textarea>";
-            $html .= "</div>";
-            $html .= "<div class='form-group'>";
-            $html .= "<button type='submit' class='btn btn-primary btn-lg btn-block'>Применить изменения</button>";
-            $html .= "</div>";
-            $html .= "</form>";
-        }
-        return $html;
-    }
-
+    /**
+     * Функция для получения необходимых файлов исходя из значений $_GET['page']
+     */
     private function getDir() {
         $this->modifyDirectory = "controller/" . $this->currentPage . "Controller.php";
         $this->tplDirectory = "view/" . $this->currentPage . ".php";

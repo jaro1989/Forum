@@ -1,41 +1,44 @@
-<!--jumbotron-->
 
-<div class="jumbotron top-margin-low">
     <div class="container" >
         <div class="row "> 
             <div class="col-md-3 top-margin">  
             </div>
             <!--Categories and other -->            
-            <div class="col-md-4 top-margin">   
-                <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<? echo $_GET['cat_id'];?>"method="post">
-                    <fieldset>
+            <div class="col-md-4 top-margin">  
+                <?php if (isset($_SESSION['userName'])) { ?>
+                    <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<?= $_GET['cat_id']; ?>" method="post">
+                        <fieldset>
 
-                        <!-- Form Name -->
-                        <legend>Добавить запись</legend>
+                            <!-- Form Name -->
+                            <legend>Добавить запись</legend>
 
-                        <!-- Text input-->
-                        <div class="control-group">
-                            <div>       
-                                <label class="control-label" for="email">Заголовок сообщения:</label>
+                            <!-- Text input-->
+                            <div class="control-group">
+                                <div>       
+                                    <label class="control-label" for="email">Заголовок сообщения:</label>
+                                </div>
+                                <div>
+                                    <input id="post_title" name="post_title" placeholder="" class="input-medium" required="" type="text">
+                                </div>
+                                <div>
+                                    <label class="control-label" for="about">Текст сообщения</label>
+                                </div>
+                                <div>
+                                    <textarea id="about" cols="50" name="post_text"></textarea>
+                                </div>
+                                <div>
+                                    <button type="submit" name="Submit" class="btn btn-primary">Создать запись</button>
+                                </div>
                             </div>
-                            <div>
-                                <input id="post_title" name="post_title" placeholder="" class="input-medium" required="" type="text">
-                            </div>
-                            <div>
-                                <label class="control-label" for="about">Текст сообщения</label>
-                            </div>
-                            <div>
-                                <textarea id="about" cols="50" name="post_text"></textarea>
-                            </div>
-                            <div>
-                                <button type="submit" name="Submit" class="btn btn-primary">Создать запись</button>
-                            </div>
-                        </div>
 
 
 
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>
+                
+            <?php }else{ ?>
+            <h2>Зарегистрируйтесь, чтобы добавить запись</h2>
+            <?php } ?>
             </div>
         </div>
     </div>
@@ -63,7 +66,7 @@
         </div>
         <!--End Categories and other --> 
         <!--Blog Listing--> 
-        <div class="col-md-4 top-margin" >
+        <div class="col-md-6 top-margin" >
             <div >
                 <ul class="timeline">
                     <?php echo ContentManager::renderPost($posts); ?>
@@ -76,5 +79,5 @@
     <!--Blog end-->  
 
 
-</div>
+
 <!-- /.container -->

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Класс Form отвечает за валидацию и обработку пользовательского ввода
+ */
 Class Form {
 
     private $info = "";
@@ -12,32 +14,44 @@ Class Form {
     public $picture;
     public $errors;
     protected $answer;
-
+    /**
+     * 
+     * @param array $dataArray Массив данных регистрации
+     */
     public function getUserInfo(array $dataArray) {
         $this->data['login'] = htmlspecialchars(trim($dataArray['login']));
         $this->data['email'] = htmlspecialchars(trim($dataArray['email']));
         $this->data['password'] = htmlspecialchars(trim($dataArray['password']));
-		$this->data['about'] = htmlspecialchars(trim($dataArray['about']));
+        $this->data['about'] = htmlspecialchars(trim($dataArray['about']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
     }
-	public function getCategoryInfo(array $dataArray) {
+    /**
+     * 
+     * @param array $dataArray Массив данныъ создания формы
+     * @return type
+     */
+    public function getCategoryInfo(array $dataArray) {
         $this->data['categoryTitle'] = htmlspecialchars(trim($dataArray['category_title']));
         $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
         $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
-		if(!$this->validateCaptcha()){
-			return $this->errors['captcha'] = "Неверная капча";
-		};
+        if (!$this->validateCaptcha()) {
+            return $this->errors['captcha'] = "Неверная капча";
+        };
     }
-	public function getNewPost(array $dataArray) {
-        
+    /**
+     * 
+     * @param array $dataArray Массив данных создания нового сообщения
+     */
+    public function getNewPost(array $dataArray) {
+
         $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
         $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
-        
-		
     }
-	
-
+    /**
+     * Валидация формы регистрации
+     * @return boolean Результат
+     */
     public function validateAll() {
         if (self::validateLogin() and
                 self::validateEmail() and
@@ -91,7 +105,10 @@ Class Form {
             return TRUE;
         }
     }
-
+    /**
+     * Генерация капчи
+     * @return string Капча
+     */
     public function generateCaptcha() {
         $a = rand(1, 9);
         $b = rand(1, 9);

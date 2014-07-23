@@ -24,6 +24,18 @@
                 </div>
 
             </div>
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Список тэгов
+                </div>
+                <div class="panel-body">
+
+                    <?php echo ContentManager::renderTags($tags); ?>
+
+                </div>
+
+            </div>
 
         </div>
         <!--End Categories and other --> 

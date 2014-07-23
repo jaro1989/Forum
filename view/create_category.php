@@ -29,7 +29,7 @@
                 echo ContentManager::renderSucsess('category');
             }
             ?>
-            <form class="form-horizontal" action="index.php?page=createPost&&action=done"method="post">
+            <form class="form-horizontal" action="index.php?page=create_category&&action=done"method="post">
                 <fieldset>
 
                     <!-- Form Name -->
@@ -61,6 +61,14 @@
                         </div>
                     </div>
 
+                    <!-- Tags-->
+                    <div class="control-group">
+                        <label class="control-label" for="email">Тэги:</label>
+                        <div class="controls">
+                            <input id="tags" name="tags" placeholder="" class="input-medium" required="" type="text">
+                            <p class="help-block">Введите тэги через запятую (Пример: работа, бизнес)</p>
+                        </div>
+                    </div>
                     <!-- Prepended text-->
                     <div class="control-group">
                         <label class="control-label" for="captcha">Captcha</label>

@@ -44,9 +44,7 @@
                 <?php
                 if (isset($errorsInfo)) {
                     echo ContentManager::renderRegErrors($errorsInfo);
-                    ?>
-                    <a href='index.php?page=registration'>Вернуться на поле регистрации</a>
-                    <?php
+                    ?><a href='index.php?page=registration'>Вернуться на поле регистрации</a><?php
                 }
                 if (isset($sucsess)) {
                     echo ContentManager::renderSucsess('registration');
@@ -58,7 +56,4 @@
 
     </div>
     <!--Blog end-->  
-
-
 </div>
-<!-- /.container -->

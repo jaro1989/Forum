@@ -5,7 +5,7 @@
 class ContentManager {
 
     public $currentPage = 'main';
-    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login','createPost', 'forum_in');
+    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login','create_category', 'forum_in');
     public $modifyDirectory;
     public $tplDirectory;
     /**
@@ -37,7 +37,7 @@ class ContentManager {
             }
 			$html .= "<li class='list-group-item'>";
 			
-            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&&cat_id=".$value['id'] ." '>" . $value['title'] . "</a>";
+            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&cat_id=".$value['id'] ." '>" . $value['title'] . "</a>";
             
 			$html .= "</li>";
         }
@@ -81,6 +81,11 @@ class ContentManager {
 
             $html .="<div class='timeline-footer'>";
             $html .="<a class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
+
+            foreach ($value[0] as $tag) {
+
+                $html .="<a class='btn btn-warning btn-xs'>" . $tag['TagName'] . "</a>";
+            }
             $html .="</div>";
             $html .="</div>";
             $html .="</li>";

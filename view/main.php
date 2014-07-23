@@ -18,9 +18,9 @@
                     Список категорий
                 </div>
                 <div class="panel-body">
-                    
-                        <?php echo ContentManager::renderCategories($categories, "messNum"); ?>
-                    
+
+                    <?php echo ContentManager::renderCategories($categories, "messNum"); ?>
+
                 </div>
 
             </div>

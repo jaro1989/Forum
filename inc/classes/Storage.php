@@ -98,6 +98,7 @@ class Storage implements Data {
      */
     public function getPosts($userID) {
         $query = "SELECT
+					f_posts.id,
 					f_posts.title,
 					f_posts.text,
 					f_posts.dateAdd AS dateAdd,
@@ -108,14 +109,31 @@ class Storage implements Data {
 					INNER JOIN f_posts ON f_posts.user_id = f_users.id
 					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
 					WHERE
-					f_users.id = f_posts.user_id AND
-					f_posts.category_id = f_categories.id AND
 					f_users.id = $userID
 					ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+        $i = 0;
+        foreach ($this->data as $value) {
+
+
+
+            $query = "SELECT 
+					f_tags.name AS TagName
+					FROM
+					f_posts
+					INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
+					INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
+					WHERE f_posts.id = $value[id]";
+            $sth = $this->dbh->prepare($query);
+            $sth->execute();
+            $this->tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+            array_unshift($this->data[$i], $this->tags);
+            $i++;
+        }
         return $this->data;
     }
 
@@ -127,6 +145,7 @@ class Storage implements Data {
      */
     public function getCategoryPosts($categoryID) {
         $query = "SELECT
+					f_posts.id,
 					f_posts.title,
 					f_posts.text,
 					f_posts.dateAdd AS dateAdd,
@@ -137,14 +156,31 @@ class Storage implements Data {
 					INNER JOIN f_posts ON f_posts.user_id = f_users.id
 					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
 					WHERE
-					f_users.id = f_posts.user_id AND
-					f_posts.category_id = f_categories.id AND
 					f_posts.category_id = $categoryID
 					ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $i = 0;
+        foreach ($this->data as $value) {
+
+
+
+            $query = "SELECT 
+					f_tags.name AS TagName
+					FROM
+					f_posts
+					INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
+					INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
+					WHERE f_posts.id = $value[id]";
+            $sth = $this->dbh->prepare($query);
+            $sth->execute();
+            $this->tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+            array_unshift($this->data[$i], $this->tags);
+            $i++;
+        }
+
         return $this->data;
     }
 
@@ -176,7 +212,7 @@ class Storage implements Data {
         if ($sth->fetchAll(PDO::FETCH_ASSOC) != NULL) {
             $this->error['email'] = "Данный email уже существует";
         }
-        if (!isset($this->error['email']) and !isset($this->error['login'])) {
+        if (!isset($this->error['email']) and ! isset($this->error['login'])) {
             $sth = $this->dbh->prepare('INSERT INTO f_users (login, status_id, email,dateAdd, password, about)
 		VALUES (:login, 2, :email, NOW(), :password, :about)');
             $sth->execute(array(':login' => $info['login'], ':email' => $info['email'], ':password' => md5($info['password']), ':about' => $info['about']));
@@ -248,6 +284,13 @@ class Storage implements Data {
         $sth = $this->dbh->prepare('INSERT INTO f_posts (category_id, user_id,title, dateAdd, text)
 		VALUES (:cat_id, :user_id, :title, NOW(), :text)');
         $sth->execute(array(':cat_id' => $data['0']['id'], ':user_id' => $userID, ':title' => $info['postTitle'], ':text' => $info['postText']));
+
+        if ($info['tags'] != NULL) {
+            $sth = $this->dbh->prepare('SELECT id FROM f_posts WHERE id = (SELECT MAX(id) FROM f_posts)');
+            $sth->execute();
+            $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+            $this->putTags($info['tags'], $data['0']['id']);
+        }
     }
 
     /**
@@ -267,6 +310,26 @@ class Storage implements Data {
         $sth = $this->dbh->prepare('UPDATE f_categories SET  messNum =:newNum 
 		WHERE id = :cat_id');
         $sth->execute(array(':cat_id' => $catID, ':newNum' => $data[0]['messNum'] + 1));
+
+        if ($info['tags'] != NULL) {
+            $sth = $this->dbh->prepare('SELECT id FROM f_posts WHERE id = (SELECT MAX(id) FROM f_posts) LIMIT 1');
+            $sth->execute();
+            $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+            $this->putTags($info['tags'], $data['0']['id']);
+        }
+    }
+    
+    private function putTags(array $tags, $postID) {
+
+        foreach ($tags as $tag) {
+            $sth = $this->dbh->prepare('INSERT IGNORE INTO f_tags (name) VALUES (:name)');
+            $sth->execute(array(':name' => $tag));
+            $sth = $this->dbh->prepare('SELECT id FROM f_tags WHERE name = :name LIMIT 1');
+            $sth->execute(array(':name' => $tag));
+            $data = $sth->fetchAll(PDO::FETCH_ASSOC);
+            $sth = $this->dbh->prepare('INSERT IGNORE INTO f_tag2post (post_id, tag_id) VALUES (:post_id, :tag_id)');
+            $sth->execute(array(':post_id' => $postID, ':tag_id' => $data[0]['id']));
+        }
     }
 
 }

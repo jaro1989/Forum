@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Класс Form отвечает за валидацию и обработку пользовательского ввода
  */
@@ -14,6 +15,7 @@ Class Form {
     public $picture;
     public $errors;
     protected $answer;
+
     /**
      * 
      * @param array $dataArray Массив данных регистрации
@@ -25,6 +27,7 @@ Class Form {
         $this->data['about'] = htmlspecialchars(trim($dataArray['about']));
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
     }
+
     /**
      * 
      * @param array $dataArray Массив данныъ создания формы
@@ -34,11 +37,15 @@ Class Form {
         $this->data['categoryTitle'] = htmlspecialchars(trim($dataArray['category_title']));
         $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
         $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
+        $this->data['tags'] = htmlspecialchars(trim($dataArray['tags']));
+        $this->generateTags($this->data['tags']);
+
         $this->captcha = htmlspecialchars(trim($dataArray['captcha']));
         if (!$this->validateCaptcha()) {
             return $this->errors['captcha'] = "Неверная капча";
         };
     }
+
     /**
      * 
      * @param array $dataArray Массив данных создания нового сообщения
@@ -48,6 +55,7 @@ Class Form {
         $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
         $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
     }
+
     /**
      * Валидация формы регистрации
      * @return boolean Результат
@@ -105,6 +113,7 @@ Class Form {
             return TRUE;
         }
     }
+
     /**
      * Генерация капчи
      * @return string Капча
@@ -132,6 +141,17 @@ Class Form {
             return FALSE;
         } else {
             return TRUE;
+        }
+    }
+
+    private function generateTags($tags) {
+        $validatedTag = array();
+        $tags = explode(",", $tags);
+        foreach ($tags as $tag) {
+            if (strlen($tag) < 15) {
+                $validatedTag[] = htmlspecialchars(trim($tag));
+            }
+            $this->data['tags'] = $validatedTag;
         }
     }
 

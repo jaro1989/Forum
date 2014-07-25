@@ -11,12 +11,17 @@ class Paginator {
     private $posts=array();
 
     public function __construct($posts=array()){
-        $this->numPosts=2;
+        $this->numPosts=5;
         foreach($posts as $key=>$value){
             $this->posts[$key]=$value;
         }
     }
 
+    /**
+     * Выполняет срез массива с постами и генерирует строку с HTML пагинатора
+     * @param array $dataSlice ссылка на массив для среза постов
+     * @return string строка с HTML пагинатора
+     */
     public function getHtmlPagin(&$dataSlice=array()){
         $size=count($this->posts);
         $numPage=$size/$this->numPosts;

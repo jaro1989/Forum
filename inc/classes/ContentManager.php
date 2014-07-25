@@ -1,13 +1,15 @@
 <?php
+
 /**
  * Класс ContanManager отвечает за директории и вывод информации
  */
 class ContentManager {
 
     public $currentPage = 'main';
-    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login','create_category', 'forum_in');
+    public $menu = array('main', 'forum', 'registration', 'contacts', 'reg_done', 'user', 'login', 'create_category', 'forum_in');
     public $modifyDirectory;
     public $tplDirectory;
+
     /**
      * Получает строку и задает подключаемые файлы
      * с помощью функции getDir
@@ -22,6 +24,7 @@ class ContentManager {
         }
         $this->getDir();
     }
+
     /**
      * 
      * @param array $data Массив значений из запроса к БД
@@ -30,24 +33,21 @@ class ContentManager {
      */
     public static function renderCategories(array $data, $printedData) {
         $html = "<ul class='list-group'>";
-        
+
         foreach ($data as $value) {
             if ($printedData === "dateAdd") {
                 $value["$printedData"] = date("Y/m/d H:i", strtotime($value["$printedData"]));
             }
-			$html .= "<li class='list-group-item'>";
-			
-            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&cat_id=".$value['id'] ." '>" . $value['title'] . "</a>";
-            
-			$html .= "</li>";
+            $html .= "<li class='list-group-item'>";
+
+            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&cat_id=" . $value['id'] . " '>" . $value['title'] . "</a>";
+
+            $html .= "</li>";
         }
-		$html .= "</ul>";
+        $html .= "</ul>";
         return $html;
-		
-
- 
-
     }
+
     /**
      * 
      * @param array $data Массив Сообщений
@@ -92,6 +92,52 @@ class ContentManager {
         }
         return $html;
     }
+	
+	 /**
+     * 
+     * @param array $data Массив Сообщений по тэгам
+     * @return string - HTML
+     */
+    public static function renderTagedPost(array $data) {
+        $html = "";
+        foreach ($data as $value) {
+            $html .="<li class='time-label'>";
+            $html .="<span class='bg-light-blue'>Posted in : " . $value['cat_title'] . " : by " . $value['login'];
+            $html .="</span>";
+            $html .="<br />";
+            $html .="<br />";
+            $html .="</li>";
+
+            $html .="<li class='time-label'>";
+            $html .="<span class='bg-blue'>";
+            $html .= date("Y/M/d", strtotime($value['dateAdd']));
+            $html .="</span>";
+            $html .="</li>";
+
+            $html .="<li>";
+            $html .="";
+            $html .="<div class='timeline-item'>";
+            $html .="<span class='time'>" . date("M d", strtotime($value['dateAdd'])) . "</span>";
+            $html .="<h3 class='timeline-header'>" . $value['title'] . "</h3>";
+
+            $html .="<div class='timeline-body'>";
+            $html .=$value['text'];
+            $html .="</div>";
+
+            $html .="<div class='timeline-footer'>";
+            $html .="<a class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
+
+            foreach ($value[0] as $tag) {
+
+                $html .="<a class='btn btn-warning btn-xs'>" . $tag['TagName'] . "</a>";
+            }
+            $html .="</div>";
+            $html .="</div>";
+            $html .="</li>";
+        }
+        return $html;
+    }
+
     /**
      * 
      * @param array $data Массив пользователей
@@ -110,6 +156,7 @@ class ContentManager {
         }
         return $html;
     }
+
     /**
      * 
      * @param array $errors Массив ошибок регистрации
@@ -123,27 +170,29 @@ class ContentManager {
             $html .= "</li>";
         }
         $html .= "</br>";
-		$html .= "</div>";
-        
+        $html .= "</div>";
+
         return $html;
     }
+
     /**
      * 
      * @param string $type Вид формы
      * @return string HTML
      */
     public static function renderSucsess($type) {
-		if($type === 'category'){
-		$html = "<p>Категория создана<br />";
-        $html .= "<a href='index.php?page=forum'>Перейти на форум</a>";
-		}
-		if($type === 'registration'){
-        $html = "<p>Вы успешно прошли регистрацию<br />";
-        $html .= "<a href='index.php?page=login'>Войти как пользователь</a>";
-		}
+        if ($type === 'category') {
+            $html = "<p>Категория создана<br />";
+            $html .= "<a href='index.php?page=forum'>Перейти на форум</a>";
+        }
+        if ($type === 'registration') {
+            $html = "<p>Вы успешно прошли регистрацию<br />";
+            $html .= "<a href='index.php?page=login'>Войти как пользователь</a>";
+        }
 
         return $html;
     }
+
     /**
      * 
      * @param array $data Массив информации о пользователе
@@ -159,6 +208,7 @@ class ContentManager {
         }
         return $html;
     }
+
     /**
      * 
      * @param array $data Массив информации о пользователе
@@ -189,6 +239,27 @@ class ContentManager {
         }
         return $html;
     }
+	
+	/**
+     * 
+     * @param array $data Массив тэгов
+     * @return string HTML
+     */
+    public static function renderTags(array $data) {
+        $html = "<ul class='list-group'>";
+
+        foreach ($data as $value) {
+           
+            $html .= "<li class='list-group-item'>";
+
+            $html .= "<span class='badge'>" . $value['num_posts'] . "</span><a href='index.php?page=forum_in&tag_id=" . $value['tag_id'] . " '>" . $value['name'] . "</a>";
+
+            $html .= "</li>";
+        }
+        $html .= "</ul>";
+        return $html;
+    }
+
     /**
      * Функция для получения необходимых файлов исходя из значений $_GET['page']
      */

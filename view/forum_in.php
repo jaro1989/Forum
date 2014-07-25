@@ -1,10 +1,11 @@
 <div class="container" >
+	<div class="jumbotron">
+    </div>
     <div class="row "> 
-        <div class="col-md-3 top-margin">  
-        </div>
+        
         <!--Categories and other -->
-        <?php if (isset($_SESSION['userName'])) { ?>
-            <div class="col-md-4 top-margin">   
+        <?php if (isset($_SESSION['userName']) and isset($_GET['cat_id'])) { ?>
+            <div class="col-md-4 top-margin col-md-offset-3">   
                 <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<? echo $_GET['cat_id'];?>"method="post">
                     <fieldset>
 
@@ -41,7 +42,7 @@
 
                     </fieldset>
                 </form>
-            <?php } else { ?>
+            <?php } elseif(!isset($_SESSION['userName'])) { ?>
                 <h2>Зарегистрируйтесь, чтобы добавить запись</h2>
             <?php } ?>
         </div>
@@ -60,8 +61,20 @@
                     Список категорий
                 </div>
                 <div class="panel-body">
-
+					
                     <?php echo ContentManager::renderCategories($categories, "messNum"); ?>
+
+                </div>
+
+            </div>
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Список тэгов
+                </div>
+                <div class="panel-body">
+					
+                    <?php echo ContentManager::renderTags($tags); ?>
 
                 </div>
 
@@ -73,7 +86,14 @@
         <div class="col-md-8 top-margin" >
             <div >
                 <ul class="timeline">
-                    <?php echo ContentManager::renderPost($posts); ?>
+                    <?php
+					if(isset($_GET['cat_id'])){
+						 echo ContentManager::renderPost($posts); 
+					}?>
+                    <?php
+					if(isset($_GET['tag_id'])){
+						 echo ContentManager::renderTagedPost($tagedPosts); 
+					}?>
                 </ul>
             </div>
         </div>

@@ -54,6 +54,8 @@ Class Form {
 
         $this->data['postTitle'] = htmlspecialchars(trim($dataArray['post_title']));
         $this->data['postText'] = htmlspecialchars(trim($dataArray['post_text']));
+		$this->data['tags'] = htmlspecialchars(trim($dataArray['tags']));
+		$this->generateTags($this->data['tags']);
     }
 
     /**

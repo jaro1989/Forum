@@ -6,18 +6,18 @@
  * количество постов на страницу 5
  */
 class Paginator {
+
     private $numPosts;
     private $posts=array();
+
     public function __construct($posts=array()){
-        $this->numPosts=5;
-        $this>$posts=$posts;
+        $this->numPosts=2;
+        foreach($posts as $key=>$value){
+            $this->posts[$key]=$value;
+        }
     }
 
-    /**
-     * @param array $slicePosts ссылка на масссив для среза постов
-     * @return string html пагинатора
-     */
-    public function getHtmlPagin(&$slicePosts=array()){
+    public function getHtmlPagin(&$dataSlice=array()){
         $size=count($this->posts);
         $numPage=$size/$this->numPosts;
         $numPage=((int)$numPage==$numPage)?$numPage:(int)$numPage+1;
@@ -32,11 +32,8 @@ class Paginator {
             }
         }
         $html .= "</ul></div>";
-        foreach($this->posts as $value){
-            $slicePosts[]=$value;
-        }
         $startIndex = ($numPage-1)*$this->numPosts;
-        $slicePosts=array_slice($slicePosts, $startIndex, $startIndex+$this->numPosts);
+        $dataSlice=array_slice($this->posts, $startIndex, $startIndex+$this->numPosts);
         return $html;
     }
 }

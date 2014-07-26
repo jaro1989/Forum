@@ -19,8 +19,6 @@
         <div class="col-md-10 top-margin" >
             <div >
                 <!--login modal-->
-
-
                 <p><?php
                     if (isset($authMessage)) {
                         echo $authMessage;

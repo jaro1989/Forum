@@ -6,7 +6,7 @@
         <!--Categories and other -->
         <?php if (isset($_SESSION['userName']) and isset($_GET['cat_id'])) { ?>
             <div class="col-md-4 top-margin col-md-offset-3">   
-                <form class="form-control-static" action="index.php?page=forum_in&&action=done&&cat_id=<? echo $_GET['cat_id'];?>"method="post">
+                <form class="form-control-static" action="index.php?page-forum_in-action-done&&cat_id-<? echo $_GET['cat_id'];?>"method="post">
                     <fieldset>
 
                         <!-- Form Name -->

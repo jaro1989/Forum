@@ -35,7 +35,12 @@ class Paginator {
                 if($i == $curPageNum){
                     $html .= "<li ><a href='#' class='disabled'>$i</a></li>";
                 } else {
-                    $html .= "<li><a href='?page=forum_in&cat_id=$_GET[cat_id]&pagePosts=$i'>$i</a></li>";
+                    if(isset($_GET['cat_id'])){
+                        $html .= "<li><a href='?page=forum_in&cat_id=$_GET[cat_id]&pagePosts=$i'>$i</a></li>";
+                    }
+                    else{
+                        $html .= "<li><a href='?page=main&pagePosts=$i'>$i</a></li>";
+                    }
                 }
             }
         }

@@ -40,7 +40,7 @@ class ContentManager {
             }
             $html .= "<li class='list-group-item'>";
 
-            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page=forum_in&cat_id=" . $value['id'] . " '>" . $value['title'] . "</a>";
+            $html .= "<span class='badge'>" . $value["$printedData"] . "</span><a href='index.php?page-forum_in-cat_id-" . $value['id'] . ".html '>" . $value['title'] . "</a>";
 
             $html .= "</li>";
         }
@@ -83,7 +83,7 @@ class ContentManager {
             $html .="</div>";
 
             $html .="<div class='timeline-footer'>";
-            $html .="<a class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
+            $html .="<a href='index.php?page=user&user_id=".$value['userID']."' class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
 
             foreach ($value[0] as $tag) {
 
@@ -130,7 +130,7 @@ class ContentManager {
             $html .="</div>";
 
             $html .="<div class='timeline-footer'>";
-            $html .="<a class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
+            $html .="<a href='index.php?page=user&user_id=".$value['userID']." 'class='btn btn-default btn-xs'>by:" . $value['login'] . "</a>";
 
             foreach ($value[0] as $tag) {
 
@@ -244,8 +244,30 @@ class ContentManager {
         }
         return $html;
     }
+    
+        public static function renderUserMailTable(array $data) {
+        $html = "<h3>Напишите сообщение</h3><br>";
+        
+        foreach ($data as $value) {
+            $html .= "<form class='form col-md-10 center-block' action='index.php?page=user&user_id=$_GET[user_id]&action=mail_sent' method='post'>";
+            $html .= "<div>Заголовок</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<input class='form-control' name='login' type='text'>";
+            $html .= "<input class='form-control' value=" . $value['email'] . " name='email' type='hidden'>";
+            $html .= "</div>";
+            $html .= "<div>Текст сообщения</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<textarea class='form-control' name='message'></textarea>";
+            $html .= "</div>";
+            $html .= "<div class='form-group'>";
+            $html .= "<button type='submit' class='btn btn-primary btn-lg btn-block'>Отослать сообщение</button>";
+            $html .= "</div>";
+            $html .= "</form>";
+        }
+        return $html;
+    }
 	
-	/**
+     /**
      * 
      * @param array $data Массив тэгов
      * @return string HTML

@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.co>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^page-([^-]*)-cat_id-([^-]*)\.html$ /index.php?page=$1&cat_id=$2 [L]
+</IfModule>

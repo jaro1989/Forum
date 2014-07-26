@@ -84,14 +84,14 @@ class Storage implements Data {
      * @return array Массив данных
      */
     public function getCategories($order) {
-        $query = "SELECT id,title,$order FROM f_categories ORDER BY $order DESC";
+        $query = "SELECT id,title,$order FROM f_categories ORDER BY :order DESC";
         $sth = $this->dbh->prepare($query);
-        $sth->execute();
+        $sth->execute(array(':order' => $order));
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
         return $this->data;
-        }
+    }
 
-        public function getTags() {
+    public function getTags() {
         $query = "SELECT
                     f_tag2post.tag_id, COUNT(f_tag2post.post_id) AS num_posts, f_tags.name
                     FROM f_tag2post INNER JOIN f_tags
@@ -110,38 +110,35 @@ class Storage implements Data {
      */
     public function getPosts($userID) {
         $query = "SELECT
-					f_posts.id,
-					f_posts.title,
-					f_posts.text,
-					f_posts.dateAdd AS dateAdd,
-					f_users.login,
-					f_categories.title AS cat_title
-					FROM
-					f_users
-					INNER JOIN f_posts ON f_posts.user_id = f_users.id
-					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
-					WHERE
-					f_users.id = $userID
-					ORDER BY dateAdd DESC";
+                        f_users.id AS userID,
+			f_posts.id,
+			f_posts.title,
+                        f_posts.text,
+			f_posts.dateAdd AS dateAdd,
+			f_users.login,
+			f_categories.title AS cat_title
+			FROM
+			f_users
+			INNER JOIN f_posts ON f_posts.user_id = f_users.id
+			INNER JOIN f_categories ON f_posts.category_id = f_categories.id
+			WHERE
+			f_users.id = :userID
+			ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
-        $sth->execute();
+        $sth->execute(array(':userID' => $userID));
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
-
+        $query = "SELECT 
+			f_tags.name AS TagName
+			FROM
+			f_posts
+			INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
+			INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
+			WHERE f_posts.id = :postID";
+        $sth = $this->dbh->prepare($query);
         $i = 0;
         foreach ($this->data as $value) {
-
-
-
-            $query = "SELECT 
-					f_tags.name AS TagName
-					FROM
-					f_posts
-					INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
-					INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
-					WHERE f_posts.id = $value[id]";
-            $sth = $this->dbh->prepare($query);
-            $sth->execute();
+            $sth->execute(array(':postID' => $value['id']));
             $this->tags = $sth->fetchAll(PDO::FETCH_ASSOC);
             array_unshift($this->data[$i], $this->tags);
             $i++;
@@ -157,37 +154,35 @@ class Storage implements Data {
      */
     public function getCategoryPosts($categoryID) {
         $query = "SELECT
-					f_posts.id,
-					f_posts.title,
-					f_posts.text,
-					f_posts.dateAdd AS dateAdd,
-					f_users.login,
-					f_categories.title AS cat_title
-					FROM
-					f_users
-					INNER JOIN f_posts ON f_posts.user_id = f_users.id
-					INNER JOIN f_categories ON f_posts.category_id = f_categories.id
-					WHERE
-					f_posts.category_id = $categoryID
-					ORDER BY dateAdd DESC";
+                        f_users.id AS userID, 
+			f_posts.id,
+			f_posts.title,
+			f_posts.text,
+			f_posts.dateAdd AS dateAdd,
+			f_users.login,
+			f_categories.title AS cat_title
+			FROM
+			f_users
+			INNER JOIN f_posts ON f_posts.user_id = f_users.id
+			INNER JOIN f_categories ON f_posts.category_id = f_categories.id
+			WHERE
+			f_posts.category_id = :categoryID
+			ORDER BY dateAdd DESC";
 
         $sth = $this->dbh->prepare($query);
-        $sth->execute();
+        $sth->execute(array(':categoryID' => $categoryID));
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT 
+			f_tags.name AS TagName
+			FROM
+			f_posts
+			INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
+			INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
+			WHERE f_posts.id = :postID";
+        $sth = $this->dbh->prepare($query);
         $i = 0;
         foreach ($this->data as $value) {
-
-
-
-            $query = "SELECT 
-					f_tags.name AS TagName
-					FROM
-					f_posts
-					INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
-					INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
-					WHERE f_posts.id = $value[id]";
-            $sth = $this->dbh->prepare($query);
-            $sth->execute();
+            $sth->execute(array(':postID' => $value['id']));
             $this->tags = $sth->fetchAll(PDO::FETCH_ASSOC);
             array_unshift($this->data[$i], $this->tags);
             $i++;
@@ -195,8 +190,8 @@ class Storage implements Data {
 
         return $this->data;
     }
-	
-	/**
+
+    /**
      * Получение сообщений из одной категории
      * @param type $categoryID
      * @return type Массив данных
@@ -204,6 +199,7 @@ class Storage implements Data {
      */
     public function getTagedPosts($tagID) {
         $query = "SELECT DISTINCT
+                                
 					f_posts.id,
 					f_posts.title,
 					f_posts.text,
@@ -222,19 +218,16 @@ class Storage implements Data {
         $sth->execute();
         $this->data = $sth->fetchAll(PDO::FETCH_ASSOC);
         $i = 0;
+        $query = "SELECT 
+			f_tags.name AS TagName
+			FROM
+			f_posts
+			INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
+			INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
+			WHERE f_posts.id = :postID";
+        $sth = $this->dbh->prepare($query);
         foreach ($this->data as $value) {
-
-
-
-            $query = "SELECT 
-					f_tags.name AS TagName
-					FROM
-					f_posts
-					INNER JOIN f_tag2post ON f_posts.id = f_tag2post.post_id
-					INNER JOIN f_tags ON f_tag2post.tag_id = f_tags.id
-					WHERE f_posts.id = $value[id]";
-            $sth = $this->dbh->prepare($query);
-            $sth->execute();
+            $sth->execute(array(':postID' => $value['id']));
             $this->tags = $sth->fetchAll(PDO::FETCH_ASSOC);
             array_unshift($this->data[$i], $this->tags);
             $i++;
@@ -309,7 +302,18 @@ class Storage implements Data {
      */
     public function updateUserInfo(array $info) {
         $sth = $this->dbh->prepare('UPDATE f_users SET login = :login, email = :email, about = :about  WHERE id = :id');
-        $sth->execute(array(':id' => $info['userID'], ':login' => $info['login'], ':email' => $info['email'], ':about' => $info['about']));
+        $sth->execute(array(':id' => htmlspecialchars(trim($info['userID'])), ':login' => htmlspecialchars(trim($info['login'])),
+        ':email' => htmlspecialchars(trim($info['email'])), ':about' => htmlspecialchars(trim($info['about']))));
+    }
+    /**
+     * Функция отсылает почту
+     * @param array $info Информация о письме
+     */
+    public function sendMail(array $info) {
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        mail(htmlspecialchars(trim($info['email'])), htmlspecialchars(trim($info['title'])),
+             htmlspecialchars(trim($info['message'])), $headers);
     }
 
     /**
@@ -377,7 +381,11 @@ class Storage implements Data {
             $this->putTags($info['tags'], $data['0']['id']);
         }
     }
-
+    /**
+     * Фукция вносит тэги в базу данных
+     * @param array $tags Массив тэгов
+     * @param type $postID Номер поста, которому данные тэги соответствуют
+     */
     private function putTags(array $tags, $postID) {
 
         foreach ($tags as $tag) {

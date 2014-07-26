@@ -4,7 +4,7 @@
         <h2><strong>Зарегестрируйтесь для создания новых категорий и постов</strong>  </h2>
     <?php } else { ?>
 
-        <h2><strong>Выберите категорию или <a href="index.php?page=create_category"> создайте новую </a></strong>  </h2>
+        <h2><strong>Выберите категорию или <a href="index.php?page-create_category"> создайте новую </a></strong>  </h2>
 
     <?php } ?>
 

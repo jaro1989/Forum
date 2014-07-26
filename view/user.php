@@ -20,8 +20,12 @@
                         <span class="icon-cog icon-white"></span><span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="index.php?page=user&&action=modify"><span class="icon-wrench"></span> Modify</a></li>
-
+                    <?php if(isset($_SESSION['userID']) and !isset($_GET['user_id'])){?>
+                        <li><a href="index.php?page=user&action=modify"><span class="icon-wrench"></span> Modify</a></li>
+                    <?php } else { ?>
+                        
+                        <li><a href="index.php?page=user&action=mail&user_id=<?php echo $_GET['user_id'];?>"><span class="icon-wrench"></span> Написать сообщение</a></li>
+                    <?php } ?> 
                     </ul>
                 </div>
             </div>
@@ -37,6 +41,11 @@
                 <?php
                 if ($_GET['page'] == 'user' and isset($_GET['action']) and $_GET['action'] == 'modify') {
                     echo ContentManager::renderUserUpdateTable($userInfo);
+                }
+                ?>
+                                <?php
+                if ($_GET['page'] == 'user' and isset($_GET['action']) and $_GET['action'] == 'mail') {
+                    echo ContentManager::renderUserMailTable($userInfo);
                 }
                 ?>
 

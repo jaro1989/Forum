@@ -55,7 +55,10 @@ class ContentManager {
      */
     public static function renderPost(array $data) {
         $html = "";
-        foreach ($data as $value) {
+        $posts=new Paginator($data);
+        $paginHtml=$posts->getHtmlPagin($data);
+
+        foreach ($posts->dataSlices as $value) {
             $html .="<li class='time-label'>";
             $html .="<span class='bg-light-blue'>Posted in : " . $value['cat_title'] . " : by " . $value['login'];
             $html .="</span>";
@@ -89,7 +92,9 @@ class ContentManager {
             $html .="</div>";
             $html .="</div>";
             $html .="</li>";
+
         }
+        $html .= $paginHtml;
         return $html;
     }
 	

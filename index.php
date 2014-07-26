@@ -13,6 +13,8 @@ include ("inc/classes/Data.php");
 include ("inc/classes/Form.php");
 include ("inc/classes/Storage.php");
 include ("inc/classes/ContentManager.php");
+include ("inc/classes/Paginator.php");
+
 //Загрузка и обрработка шаблона
 (isset($_GET['page'])) ? $fileManager = new ContentManager($_GET['page']) : $fileManager = new ContentManager('main');
 include ($fileManager->modifyDirectory);
